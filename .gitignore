@@ -1,0 +1,4 @@
+/imdb_files/*
+/virtual/*
+/.vscode/*
+**/__pycache__/*
