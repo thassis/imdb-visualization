@@ -2,13 +2,31 @@
 <html>
 
 <head>
+  <link rel="stylesheet" href="styles.css">
   <meta charset="UTF-8">
   <title>Gráfico com Chart.js</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
-  <canvas id="myChart"></canvas>
+  <div class="body-content">
+
+    <form id="genres-by-year">
+      <label for="yearsToGroup">Quantidade de anos para agrupar:</label>
+      <input type="text" id="yearsToGroup" name="yearsToGroup"><br><br>
+  
+      <label for="minYear">Menor ano:</label>
+      <input type="text" id="minYear" name="minYear"><br><br>
+  
+      <label for="maxYear">Maior ano:</label>
+      <input type="text" id="maxYear" name="maxYear"><br><br>
+  
+      <button type="submit">Submit</button>
+    </form>
+
+    <canvas id="myChart"></canvas>
+  </div>
+
   <script src="charts/datas.js"></script>
   <script src="charts/genres-by-year/genresByYear.js"></script>
   <script src="index.js"></script>
