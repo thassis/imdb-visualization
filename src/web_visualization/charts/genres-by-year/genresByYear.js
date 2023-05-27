@@ -1,14 +1,14 @@
 function groupByNumbersOfYears(numberOfYears, firstYear, lastYear) {
 	const filtered = [...dataGenresByYear].filter(genreByYear =>
-		Number(genreByYear.startYear) >= firstYear && Number(genreByYear.startYear) <= lastYear
+		parseInt(genreByYear.startYear) >= firstYear && parseInt(genreByYear.startYear) <= lastYear
 	)
 
-	return filtered.reduce((acc, current, index) => {
+	const groupedGenres = filtered.reduce((acc, current, index) => {
 		if (index % numberOfYears === 0) {
 			acc.push({
 				...current,
-				initialIntDate: Number(current.startYear),
-				endIntDate: Number(current.startYear + numberOfYears)
+				initialIntDate: parseInt(current.startYear),
+				endIntDate: parseInt(current.startYear) + parseInt(numberOfYears)
 			});
 
 		} else {
@@ -27,18 +27,50 @@ function groupByNumbersOfYears(numberOfYears, firstYear, lastYear) {
 
 		return acc;
 	}, [])
+
+	return groupedGenres.sort((a, b) => a.initialIntDate - b.initialIntDate);
 }
 
-function createGenresByYear() {
-	const filteredData = groupByNumbersOfYears(10, 1900, 2023)
+function groupByGenres (genresByYear) {
+	genres = {}
+
+	genresByYear.forEach(year => {	
+		Object.entries(year).forEach(([key, value]) => {
+			if(key != 'initialIntDate' && key != 'endIntDate' && key != 'startYear' && key != 'endYear'){
+
+				if(!genres[key]) genres[key] = []
+	
+				genres[key].push(value)
+			}
+		})
+	})
+
+	return genres
+}
+
+function generateColors() {
+  const colors = [];
+
+  for (let i = 0; i < 30; i++) {
+    const color = '#' + Math.floor(Math.random() * 16777215).toString(16);
+    colors.push(color);
+  }
+
+  return colors;
+}
+
+function createGenresByYear(quantityYears, minYear, maxYear) {
+	const filteredData = groupByNumbersOfYears(quantityYears, minYear, maxYear)
+	const groupedGenres = groupByGenres(filteredData)
+	const colorPalette = generateColors();
 
 	const data = {
 		labels: filteredData.map(d => `${d.initialIntDate} ~ ${d.endIntDate}`),
-		datasets: filteredData.map(d => ({
-			label: 'My First dataset',
-			data: { count: 4, min: -100, max: 100 },
-			borderColor: 'red',
-			backgroundColor: 'red',
+		datasets: Object.entries(groupedGenres).map(([key, value], index) => ({
+			label: key,
+			data: value,
+			borderColor: colorPalette[index],
+			backgroundColor: colorPalette[index],
 			fill: true
 		}))
 		// {
@@ -74,14 +106,14 @@ function createGenresByYear() {
 				x: {
 					title: {
 						display: true,
-						text: 'Month'
+						text: 'Anos'
 					}
 				},
 				y: {
 					stacked: true,
 					title: {
 						display: true,
-						text: 'Value'
+						text: 'Quantidade de filmes'
 					}
 				}
 			}
