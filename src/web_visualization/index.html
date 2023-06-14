@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-  <link rel="stylesheet" href="styles.css">
-  <meta charset="UTF-8">
-  <title>Gráfico com Chart.js</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
+  <head>
+    <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <title>Gráfico com Chart.js</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-cloud@1.2.5/build/d3.layout.cloud.js"></script>
+  </head>
 
 <body>
   <div class="body-content">
 
+    <svg id="word-cloud" width="400" height="300"></svg>
     <form id="genres-by-year">
       <label for="yearsToGroup">Quantidade de anos para agrupar:</label>
       <input type="text" id="yearsToGroup" name="yearsToGroup"><br><br>
@@ -29,6 +32,7 @@
 
   <script src="charts/datas.js"></script>
   <script src="charts/genres-by-year/genresByYear.js"></script>
+  <script src="charts/wordCloudTitles.js"></script>
   <script src="index.js"></script>
 </body>
 

@@ -2,6 +2,8 @@
 
 const myForm = document.getElementById('genres-by-year');
 
+// createWordCloud()
+
 myForm.addEventListener('submit', function(event) {
     event.preventDefault(); // Prevent form submission and page reload
 
