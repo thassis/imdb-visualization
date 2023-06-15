@@ -1,15 +1,25 @@
 // createGenresByYear(1, 2000, 2018)
 
-const myForm = document.getElementById('genres-by-year');
+const myForm = document.getElementById("genres-by-year");
 
 // createWordCloud()
 
-myForm.addEventListener('submit', function(event) {
-    event.preventDefault(); // Prevent form submission and page reload
+function createStackedGraph() {
+  yearsToGroup = document.getElementById("yearsToGroup").value || "10";
+  minDate = document.getElementById("minYear").value || "1894";
+  maxDate = document.getElementById("maxYear").value || "2020";
 
-    yearsToGroup = document.getElementById('yearsToGroup').value
-    minDate = document.getElementById('minYear').value
-    maxDate = document.getElementById('maxYear').value
+  createGenresByYear(yearsToGroup, minDate, maxDate);
+}
 
-    createGenresByYear(yearsToGroup, minDate, maxDate)
-})
+myForm.addEventListener("submit", function (event) {
+  event.preventDefault(); // Prevent form submission and page reload
+
+  createStackedGraph();
+});
+
+document.getElementById("yearsToGroup").value = "10";
+minDate = document.getElementById("minYear").value = "1894";
+maxDate = document.getElementById("maxYear").value = "2020";
+
+createStackedGraph();

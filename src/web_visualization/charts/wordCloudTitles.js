@@ -16,12 +16,8 @@ const colorPalette = generateColors();
 
 const data = [];
 
-console.log("comecou auqui");
-
 let i = 0
 for (let genre in dataMoviesWords) {
-  console.log(`Genre: ${genre}`);
-
   const genreData = dataMoviesWords[genre];
   for (let key in genreData) {
     const value = genreData[key];
@@ -35,8 +31,6 @@ for (let genre in dataMoviesWords) {
 
   i++;
 }
-
-console.log(i)
 
 function fillColor(d,i){
   return d.color;

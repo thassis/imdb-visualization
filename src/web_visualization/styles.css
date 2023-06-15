@@ -1,3 +1,19 @@
 .body-content {
-    height: 20vh;
+  margin: -8px;
+  background-color: #f1f1f1;
+  height: 100%;
+  padding: 16px;
+}
+
+.row {
+  display: flex;
+}
+
+#chartContainer {
+  height: 70vh;
+}
+
+#myChart {
+  height: 100%;
+  width: 100%;
 }
