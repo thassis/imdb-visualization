@@ -3,6 +3,7 @@ import pandas as pd
 from functools import reduce
 from collections import Counter
 import statistics
+import itertools
 
 
 def tsv_writer(field_names, output_file_name, dic):
@@ -134,6 +135,42 @@ def dict_list_creator(file_name):
         for row in reader:
             data.append(row)
     return data
+
+
+
+def count_values_in_column(csv_file_path, column_name):
+    df = pd.read_csv(csv_file_path, delimiter='\t')
+    value_counts = df[column_name].value_counts()
+    return value_counts.to_dict()
+
+
+def chord_diagram_matrix_generator():
+
+    genres_list = list(get_column_values('basics_movies_with_genres.tsv', 'genres'))
+    genres_list = sorted(genres_list)
+    index_matrix_dict = {k : i for i,k in enumerate(genres_list)}
+
+    dic = dict()
+    d = count_values_in_column("basics_movies_with_genres.tsv", 'genres')
+
+    for k in d.keys():
+        values = k.split(',')
+        if len(values) == 1:
+            values.append(values[0])
+        pairs_list = list(itertools.combinations(values, 2))
+
+        for t in pairs_list:
+            dic[t] = dic.get(t, 0) + d[k]
+
+
+    M = [[0 for i in range(28)] for j in range(28)]
+    for k, v in dic.items():
+        i = index_matrix_dict[k[0]]
+        j = index_matrix_dict[k[1]]
+        M[i][j] = v
+        M[j][i] = v
+
+    return M
 
 
 # Criar novos arquivos:
