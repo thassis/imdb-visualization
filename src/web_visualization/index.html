@@ -22,28 +22,51 @@
 
   <body>
     <div class="body-content">
-      <h1>Visualização de dados</h1>
+      <p class="title">Visualização de dados</p>
 
       <div class="row">
         <div id="chartContainer">
           <canvas id="myChart"></canvas>
         </div>
 
-        <form id="genres-by-year">
-          <label for="yearsToGroup">Quantidade de anos para agrupar:</label>
-          <input
-            type="text"
-            id="yearsToGroup"
-            name="yearsToGroup"
-          /><br /><br />
+        <form id="genres-by-year" class="form">
+          <div class="form-floating">
+            <textarea
+              style="margin-bottom: 16px"
+              type="text"
+              class="form-control"
+              placeholder="anos"
+              id="yearsToGroup"
+              name="yearsToGroup"
+            ></textarea>
+            <label for="floatingTextarea">Agrupar anos em</label>
+          </div>
 
-          <label for="minYear">Menor ano:</label>
-          <input type="text" id="minYear" name="minYear" /><br /><br />
+          <div class="form-floating">
+            <textarea
+              style="margin-bottom: 16px"
+              type="text"
+              class="form-control"
+              placeholder="anos"
+              id="minYear"
+              name="minYear"
+            ></textarea>
+            <label for="floatingTextarea">De</label>
+          </div>
 
-          <label for="maxYear">Maior ano:</label>
-          <input type="text" id="maxYear" name="maxYear" /><br /><br />
+          <div class="form-floating">
+            <textarea
+              style="margin-bottom: 16px"
+              type="text"
+              class="form-control"
+              placeholder="anos"
+              id="maxYear"
+              name="maxYear"
+            ></textarea>
+            <label for="floatingTextarea">Até</label>
+          </div>
 
-          <button type="submit">Submit</button>
+          <button class="btn btn-primary" type="submit">Atualizar</button>
         </form>
       </div>
 

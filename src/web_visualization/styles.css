@@ -1,16 +1,30 @@
 .body-content {
-  margin: -8px;
-  background-color: #f1f1f1;
   height: 100%;
-  padding: 16px;
+  padding: 32px;
+  color: #494d5f;
 }
 
 .row {
   display: flex;
+  flex-direction: row;
+}
+
+.title {
+  margin-bottom: 24px;
+  font-weight: 300;
+  font-size: 36px;
+  text-align: center;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  align-self: center;
 }
 
 #chartContainer {
-  height: 70vh;
+  max-width: 75%;
 }
 
 #myChart {

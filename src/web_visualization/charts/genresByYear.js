@@ -78,13 +78,6 @@ function createGenresByYear(quantityYears, minYear, maxYear) {
       backgroundColor: colorPalette[index],
       fill: true,
     })),
-    // {
-    // 	label: 'My First dataset',
-    // 	data: Utils.numbers(NUMBER_CFG),
-    // 	borderColor: Utils.CHART_COLORS.red,
-    // 	backgroundColor: Utils.CHART_COLORS.red,
-    // 	fill: true
-    // },
   };
 
   let chartStatus = Chart.getChart("myChart");
@@ -97,7 +90,7 @@ function createGenresByYear(quantityYears, minYear, maxYear) {
     type: "line",
     data: data,
     options: {
-      responsive: false,
+      responsive: true,
       plugins: {
         title: {
           display: true,
