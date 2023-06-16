@@ -1,8 +1,9 @@
-function groupByNumbersOfYears(numberOfYears, firstYear, lastYear) {
-  const filtered = [...dataGenresByYear].filter(
-    (genreByYear) =>
-      parseInt(genreByYear.startYear) >= firstYear &&
-      parseInt(genreByYear.startYear) <= lastYear
+
+function groupByNumbersOfYears(numberOfYears, firstYear, lastYear, selectedData) {
+  const filtered = [...selectedData].filter(
+    (selectedData) =>
+      parseInt(selectedData.startYear) >= firstYear &&
+      parseInt(selectedData.startYear) <= lastYear
   );
 
   const groupedGenres = filtered.reduce((acc, current, index) => {
@@ -64,8 +65,8 @@ function generateColors() {
   return colors;
 }
 
-function createGenresByYear(quantityYears, minYear, maxYear) {
-  const filteredData = groupByNumbersOfYears(quantityYears, minYear, maxYear);
+function createGenresByYear(quantityYears, minYear, maxYear, selectedData) {
+  const filteredData = groupByNumbersOfYears(quantityYears, minYear, maxYear, selectedData);
   const groupedGenres = groupByGenres(filteredData);
   const colorPalette = generateColors();
 

@@ -9,7 +9,8 @@ function createStackedGraph() {
   minDate = document.getElementById("minYear").value || "1894";
   maxDate = document.getElementById("maxYear").value || "2020";
 
-  createGenresByYear(yearsToGroup, minDate, maxDate);
+  // selectedData can be dataGenresByYear or dataGenredByYearGrouped
+  createGenresByYear(yearsToGroup, minDate, maxDate, dataGenresByYearGrouped);
 }
 
 myForm.addEventListener("submit", function (event) {
