@@ -1,0 +1,38 @@
+.body-content {
+  height: 100%;
+  padding: 32px;
+  color: #494d5f;
+}
+
+.row {
+  display: flex;
+  flex: 1;
+  height: 100%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.title {
+  margin-bottom: 24px;
+  font-weight: 300;
+  font-size: 36px;
+  text-align: center;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  align-self: center;
+}
+
+#chartContainer {
+  max-width: 80%;
+  margin-top: 32px;
+}
+
+#myChart {
+  height: 100%;
+  width: 100%;
+}

@@ -96,8 +96,7 @@ function createGenresByYear(quantityYears, minYear, maxYear, selectedData) {
         title: {
           display: true,
           text: (ctx) =>
-            "Quantidade de filmes produzidos por gênero a cada ano" +
-            ctx.chart.options.scales.y.stacked,
+            "Quantidade de filmes produzidos por gênero a cada ano"
         },
         tooltip: {
           mode: "index",
