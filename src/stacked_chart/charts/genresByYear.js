@@ -8,10 +8,11 @@ function groupByNumbersOfYears(numberOfYears, firstYear, lastYear, selectedData)
 
   const groupedGenres = filtered.reduce((acc, current, index) => {
     if (index % numberOfYears === 0) {
+      const endIntDate = parseInt(current.startYear) + parseInt(numberOfYears)
       acc.push({
         ...current,
         initialIntDate: parseInt(current.startYear),
-        endIntDate: parseInt(current.startYear) + parseInt(numberOfYears),
+        endIntDate: endIntDate < lastYear ? endIntDate : lastYear,
       });
     } else {
       const mergedData = {};
