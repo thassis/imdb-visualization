@@ -4,6 +4,9 @@ from functools import reduce
 from collections import Counter
 import statistics
 import itertools
+import json
+import matplotlib.pyplot as plt
+import numpy as np
 
 
 def tsv_writer(field_names, output_file_name, dic):
@@ -21,10 +24,11 @@ def filter_movies_from_file(input_name, output_name):
     with open(input_name, encoding="utf8") as file:
         reader = csv.DictReader(file, delimiter="\t")
         movies_only = filter(lambda x: x['titleType'] == 'movie' or x['titleType'] == 'tvMovie', reader)
-        tsv_writer(reader.fieldnames, output_name, movies_only)
+        movies_with_genres = filter(lambda x: x['genres'] != '\\N', movies_only)
+        tsv_writer(reader.fieldnames, output_name, movies_with_genres)
 
 
-
+#filter_movies_from_file('basics_movies.tsv', 'basics_movies_with_genres.tsv')
 
 grouped_genres_types = {"Group1": "Drama,Crime,Thriller,Mystery,Film-Noir,Horror", "Group2": "Musical,Music",
                         "Group3": "Game-Show,Reality-TV,Talk-Show", "Group4": "Documentary,News,History,Biography",
@@ -137,7 +141,6 @@ def dict_list_creator(file_name):
     return data
 
 
-
 def count_values_in_column(csv_file_path, column_name):
     df = pd.read_csv(csv_file_path, delimiter='\t')
     value_counts = df[column_name].value_counts()
@@ -172,15 +175,206 @@ def chord_diagram_matrix_generator():
 
     return M
 
+#print(chord_diagram_matrix_generator())
 
-# Criar novos arquivos:
+def tsv_to_json_array(file_path, output_file_path):
+    json_array = []
 
-# filter_movies_from_file("basics.tsv", "basics_movies.tsv")
-# group_genres_from_file("basics_movies.tsv", "basics_movies_grouped.tsv")
-# genres_per_year("basics_movies_grouped.tsv", "genres_groups_per_year.tsv")
-# mean_runtime("basics_movies.tsv", "mean_runtimes_genres.tsv")
+    with open(file_path, "r", encoding="utf-8") as tsv_file:
+        reader = csv.DictReader(tsv_file, delimiter="\t")
+        for row in reader:
+            json_object = json.dumps(row)
+            json_array.append(json.loads(json_object))
 
-# merge_two_files("basics_movies_grouped.tsv", "ratings.tsv", "basics_ratings.tsv", "tconst")
+    with open(output_file_path, "w") as json_file:
+        json.dump(json_array, json_file, indent=4)
+
+    return json_array
 
 
-# Para criar o dicionario de algum arquivo basta chamar dict_list_creator()
+def genre_rating_distribution(input_file, genre):
+    with open(input_file, encoding="utf8") as file:
+        reader = csv.DictReader(file, delimiter="\t")
+        reader =  filter(lambda x: genre in x['genres'].split(','), reader)
+        ratings_list = []
+        for row in reader:
+            ratings_list.append(row['averageRating'])
+        return ratings_list
+
+
+def visualize_genre_rating_distribution(input_file, genre):
+    interval_length = 0.5
+    num_intervals = int(10 / interval_length)
+    intervals = [(i * interval_length, (i + 1) * interval_length) for i in range(num_intervals)]
+
+    data_counter_intervals = {key: 0 for key in intervals}
+
+    data = genre_rating_distribution(input_file, genre)
+    for rating in data:
+        for interval in intervals:
+            if interval[0] <= float(rating) < interval[1]:
+                data_counter_intervals[interval] += 1
+                break
+
+    x_values = [interval[0] for interval in intervals]
+    y_values = list(data_counter_intervals.values())
+
+    plt.figure(figsize=(12, 5))
+    bar_width = 0.35
+
+    bars = plt.bar(x_values, y_values, width=bar_width, color='midnightblue')
+
+    plt.xlabel('Rating Intervals')
+    plt.ylabel('Count')
+    plt.title(genre)
+    plt.xticks(x_values)
+    plt.gca().spines['top'].set_visible(False)
+    plt.gca().spines['right'].set_visible(False)
+    plt.legend()
+    plt.tight_layout()
+    plt.show()
+
+
+def rating_vs_votes(input_file):
+    data = []
+    with open(input_file, encoding="utf8") as file:
+        reader = csv.DictReader(file, delimiter="\t")
+        reader = filter(lambda x: 'Group7' in x['genres'].split(','), reader)
+        ratings_list = []
+        for row in reader:
+            data.append((row['averageRating'], row['numVotes']))
+
+
+    # Extract x and y values from the data
+    x_values = [point[0] for point in data]
+    y_values = [point[1] for point in data]
+
+    # Customize the size of the dots
+    dot_size = 1
+
+    # Plot the scatter plot with customized dot size
+    plt.scatter(x_values, y_values, s=dot_size)
+
+    plt.xticks([])
+    plt.yticks([])
+    # Customize the plot if desired
+    plt.title('Scatter Plot')
+
+    # Display the plot
+    plt.show()
+
+# decada, nota media, genero
+def heat_map2(input_file, genre):
+    interval_years = 10
+    start = 1970
+    end = 2020
+    num_intervals = int((end-start) / interval_years)
+    intervals = [(start + i * interval_years, start + (i + 1) * interval_years) for i in range(num_intervals)]
+
+    data_counter_intervals = {key: [] for key in intervals}
+
+    with open(input_file, encoding="utf8") as file:
+        reader = csv.DictReader(file, delimiter="\t")
+        reader =  filter(lambda x: genre in x['genres'].split(','), reader)
+        for row in reader:
+            for interval in intervals:
+                if row['startYear'] != '\\N':
+                    if interval[0] <= int(row['startYear']) < interval[1] :
+                        data_counter_intervals[interval].append(row['averageRating'])
+
+
+        ret = {key : sum(float(i) for i in value)/len(value) for key, value in data_counter_intervals.items()}
+        print(ret)
+
+
+def heat_map():
+
+    genres_list = list(get_column_values('basics_movies_with_genres.tsv', 'genres'))
+    genres_list = sorted(genres_list)
+    to_remove = ['Adult', 'Game-Show', 'Reality-TV', 'Short', 'Talk-Show', 'News', 'Film-Noir']
+    for i in to_remove:
+        genres_list.remove(i)
+
+    genres_pairs = list(itertools.combinations(genres_list, 2)) + [(i,i) for i in genres_list]
+
+    dic_pairs_rating = {key : [] for key in genres_pairs}
+    dic_genres_ratings = {key: [] for key in genres_list}
+
+    with open("movies_ratings_with_genres.tsv", encoding="utf8") as file:
+        reader = csv.DictReader(file, delimiter="\t")
+        for row in reader:
+            if row['averageRating'] != '\\N':
+                genres = row['genres'].split(',')
+
+                if len(genres) == 1:
+                    genres.append(genres[0])
+                pairs_list = list(itertools.combinations(genres, 2))
+
+                for t in pairs_list:
+                    if t in dic_pairs_rating.keys():
+                        dic_pairs_rating[t].append(row['averageRating'])
+
+                for genre in genres:
+                    if genre in genres_list:
+                        dic_genres_ratings[genre].append(row['averageRating'])
+
+    dic_genres_average_rating = {key: sum(float(i) for i in value) / len(value) for key, value in
+                                 dic_genres_ratings.items()}
+    sorted_keys = sorted(dic_genres_average_rating, key=dic_genres_average_rating.get, reverse=True)
+    index_matrix_dict = {k : i for i,k in enumerate(sorted_keys)}
+    print(index_matrix_dict)
+
+    M = [[0 for i in range(len(genres_list))] for j in range(len(genres_list))]
+    for k, v in dic_pairs_rating.items():
+        i = index_matrix_dict[k[0]]
+        j = index_matrix_dict[k[1]]
+        if len(v) == 0:
+            M[i][j] = -1
+            M[j][i] = -1
+        else:
+            M[i][j] = sum(float(i) for i in v)/len(v)
+            M[j][i] = sum(float(i) for i in v)/len(v)
+
+    #Plot heat map -------------------------------------------
+    # entries_list = []
+    # for i in range(21):
+    #     for j in range(21):
+    #         if M[i][j] != -1:
+    #             entries_list.append(M[i][j])
+    #
+    # cmap = plt.get_cmap('coolwarm')
+    # cmap.set_under('gray')
+    # # Plot the heatmap
+    # plt.imshow(M, cmap=cmap, vmin=np.min(entries_list), vmax=np.max(entries_list))
+    #
+    # colorbar = plt.colorbar()
+    # colorbar.set_label('Value')
+    #
+    # # Display the plot
+    # plt.show()
+    return M
+
+
+
+
+
+
+#rating_vs_votes("movies_ratings_with_genres_grouped.tsv")
+#visualize_genre_rating_distribution('movies_ratings_with_genres_grouped.tsv', 'Group1')
+
+#group_genres_from_file("basics_movies_with_genres.tsv", "movies_with_genres_grouped.tsv")
+#genres_per_year("movies_with_genres_grouped.tsv", "final_grouped.tsv")
+#print(tsv_to_json_array("final_grouped.tsv", "final_grouped.json"))
+
+
+
+
+basic_stop_words = [
+    'a', 'an', 'the', 'and', 'but', 'or', 'so', 'if', 'as', 'at', 'by', 'for', 'from',
+    'il', 'l\'', 'lo', 'i', 'gli', 'del', 'dal', 'di', 'ni', 'in', 'su', 'sul', 'al',
+    'de', 'la', 'die', 'el', 'le', 'les', 'la', 'las', 'los', 'un', 'une', 'des', 'les', 'der',
+    'o',  'of', 'to', 'in', 'on', 'is', 'it', 'its', 'that', 'this', 'those', 'these', 'be',
+    'i', '&', '-', 'du', 'und', 'et', 'en', 'auch', 'mit', 'für', 'von', 'zu', 'im', 'ist',
+    'da', 'no', 'na', 'o', 'da',
+    '1', '2', '3', '4', '5'
+]
