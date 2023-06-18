@@ -12,7 +12,10 @@ function groupByNumbersOfYears(
 
   const groupedGenres = filtered.reduce((acc, current, index) => {
     if (index % numberOfYears === 0) {
-      const endIntDate = parseInt(current.startYear) + parseInt(numberOfYears);
+      const endIntDate =
+        numberOfYears == 1
+          ? parseInt(current.startYear)
+          : parseInt(current.startYear) + parseInt(numberOfYears);
       acc.push({
         ...current,
         initialIntDate: parseInt(current.startYear),
@@ -66,19 +69,54 @@ function generateColors(selectedData) {
   //   const color = "#" + Math.floor(Math.random() * 16777215).toString(16);
   //   colors.push(color);
   // }
-  colors_all_genres = ['#FF9E00', ' #795548', '#f4511e', '#19BA99', '#4AB049', '#FF5E96', '#0C4194', 
-  '#2C7830', '#1E46AB', '#17a589', '#e65100', '#0277bd', '#03a9f4', 
-'#8DB42F', '#0277bd', '#A0184B', '#B81D57', '#142892', '#7cb342', '#00acc1',
-'#914790', '#F45233', '#fdd835', '#808080', '#039be5', '#1471D6', ' #d84315', '#ef6c00'];
+  colors_all_genres = [
+    "#FF9E00",
+    " #795548",
+    "#f4511e",
+    "#19BA99",
+    "#4AB049",
+    "#FF5E96",
+    "#0C4194",
+    "#2C7830",
+    "#1E46AB",
+    "#17a589",
+    "#e65100",
+    "#0277bd",
+    "#03a9f4",
+    "#8DB42F",
+    "#0277bd",
+    "#A0184B",
+    "#B81D57",
+    "#142892",
+    "#7cb342",
+    "#00acc1",
+    "#914790",
+    "#F45233",
+    "#fdd835",
+    "#808080",
+    "#039be5",
+    "#1471D6",
+    " #d84315",
+    "#ef6c00",
+  ];
 
-  colors_grouped_genres =  ['#1E46AB', '#B81D57', '#00acc1', '#4AB049',
-                            '#ef6c00', '#FF5E96', '#19BA99', '#808080', 
-                            '#fdd835', '#795548', '#914790'];
+  colors_grouped_genres = [
+    "#1E46AB",
+    "#B81D57",
+    "#00acc1",
+    "#4AB049",
+    "#ef6c00",
+    "#FF5E96",
+    "#19BA99",
+    "#808080",
+    "#fdd835",
+    "#795548",
+    "#914790",
+  ];
 
-  if (selectedData == dataGenresByYear){
+  if (selectedData == dataGenresByYear) {
     return colors_all_genres;
-  }
-  else{
+  } else {
     return colors_grouped_genres;
   }
 }
@@ -100,7 +138,11 @@ function createGenresByYear(
   const colorPalette = generateColors(selectedData);
 
   const data = {
-    labels: filteredData.map((d) => `${d.initialIntDate} ~ ${d.endIntDate}`),
+    labels: filteredData.map((d) =>
+      quantityYears > 1
+        ? `${d.initialIntDate} ~ ${d.endIntDate}`
+        : d.initialIntDate
+    ),
     datasets: Object.entries(groupedGenres).map(([key, value], index) => ({
       label: key,
       data: value,
