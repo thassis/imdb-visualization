@@ -1,5 +1,9 @@
-
-function groupByNumbersOfYears(numberOfYears, firstYear, lastYear, selectedData) {
+function groupByNumbersOfYears(
+  numberOfYears,
+  firstYear,
+  lastYear,
+  selectedData
+) {
   const filtered = [...selectedData].filter(
     (selectedData) =>
       parseInt(selectedData.startYear) >= firstYear &&
@@ -8,7 +12,7 @@ function groupByNumbersOfYears(numberOfYears, firstYear, lastYear, selectedData)
 
   const groupedGenres = filtered.reduce((acc, current, index) => {
     if (index % numberOfYears === 0) {
-      const endIntDate = parseInt(current.startYear) + parseInt(numberOfYears)
+      const endIntDate = parseInt(current.startYear) + parseInt(numberOfYears);
       acc.push({
         ...current,
         initialIntDate: parseInt(current.startYear),
@@ -56,18 +60,63 @@ function groupByGenres(genresByYear) {
 }
 
 function generateColors() {
-  const colors = [];
+  // const colors = [];
 
-  for (let i = 0; i < 30; i++) {
-    const color = "#" + Math.floor(Math.random() * 16777215).toString(16);
-    colors.push(color);
-  }
+  // for (let i = 0; i < 30; i++) {
+  //   const color = "#" + Math.floor(Math.random() * 16777215).toString(16);
+  //   colors.push(color);
+  // }
+
+  colors = [
+    "#fbc02d",
+    "#ffa000",
+    "#f57c00",
+    "#e64a19",
+    "#d32f2f",
+    "#c2185b",
+    "#7b1fa2",
+    "#512da8",
+    "#303f9f",
+    "#1976d2",
+    "#0288d1",
+    "#0097a7",
+    "#00796b",
+    "#388e3c",
+    "#689f38",
+    "#afb42b",
+    "#fbc02d",
+    "#ffa000",
+    "#f57c00",
+    "#e64a19",
+    "#d32f2f",
+    "#c2185b",
+    "#7b1fa2",
+    "#512da8",
+    "#303f9f",
+    "#1976d2",
+    "#0288d1",
+    "#0097a7",
+    "#00796b",
+    "#388e3c",
+    "#689f38",
+  ];
 
   return colors;
 }
 
-function createGenresByYear(quantityYears, minYear, maxYear, selectedData) {
-  const filteredData = groupByNumbersOfYears(quantityYears, minYear, maxYear, selectedData);
+function createGenresByYear(
+  quantityYears,
+  minYear,
+  maxYear,
+  selectedData,
+  hiddenAll
+) {
+  const filteredData = groupByNumbersOfYears(
+    quantityYears,
+    minYear,
+    maxYear,
+    selectedData
+  );
   const groupedGenres = groupByGenres(filteredData);
   const colorPalette = generateColors();
 
@@ -79,6 +128,7 @@ function createGenresByYear(quantityYears, minYear, maxYear, selectedData) {
       borderColor: colorPalette[index],
       backgroundColor: colorPalette[index],
       fill: true,
+      hidden: hiddenAll,
     })),
   };
 
@@ -97,7 +147,7 @@ function createGenresByYear(quantityYears, minYear, maxYear, selectedData) {
         title: {
           display: true,
           text: (ctx) =>
-            "Quantidade de filmes produzidos por gênero a cada ano"
+            "Quantidade de filmes produzidos por gênero a cada ano",
         },
         tooltip: {
           mode: "index",
