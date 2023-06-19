@@ -1,15 +1,28 @@
+const compararPorAno = (a, b) => {
+  const anoA = parseInt(a.startYear);
+  const anoB = parseInt(b.startYear);
+
+  if (anoA < anoB) {
+    return -1;
+  }
+  if (anoA > anoB) {
+    return 1;
+  }
+  return 0;
+};
+
 function groupByNumbersOfYears(
   numberOfYears,
   firstYear,
   lastYear,
   selectedData
 ) {
-  const filtered = [...selectedData].filter(
+  let filtered = [...selectedData].filter(
     (selectedData) =>
       parseInt(selectedData.startYear) >= firstYear &&
       parseInt(selectedData.startYear) <= lastYear
   );
-
+  filtered = filtered.sort(compararPorAno);
   const groupedGenres = filtered.reduce((acc, current, index) => {
     if (index % numberOfYears === 0) {
       const endIntDate =
